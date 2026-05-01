@@ -1,11 +1,26 @@
-#include "mainwindow.h"
-
-#include <QApplication>
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include <QUrl>
+#include "src/notesmodel.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
-    return QCoreApplication::exec();
+    QGuiApplication app(argc, argv);
+
+    NotesModel notesModel;
+
+    QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("notesModel", &notesModel);
+
+    const QUrl url(u"qrc:/App/Main.qml"_qs);
+    QObject::connect(
+        &engine,
+        &QQmlApplicationEngine::objectCreationFailed,
+        &app,
+        []() { QCoreApplication::exit(-1); },
+        Qt::QueuedConnection);
+    engine.load(url);
+
+    return app.exec();
 }

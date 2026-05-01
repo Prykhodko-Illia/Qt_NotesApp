@@ -1,5 +1,4 @@
-file(GLOB SOURCES "*.cpp")
-
+file(GLOB SOURCES "*.cpp" "*.h")
 
 target_sources(NotesApp PRIVATE
     ${SOURCES}

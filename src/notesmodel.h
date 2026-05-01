@@ -1,18 +1,33 @@
 #pragma once
 
+#include <QAbstractListModel>
+#include <vector>
 #include "note.h"
-#include <map>
 
-class NotesModel
+class NotesModel : public QAbstractListModel
 {
-private:
-    std::map<uint32_t, Note> m_notesMap{};
-    uint32_t nextId = 0;
+    Q_OBJECT
 
 public:
-    NotesModel() = default;
+    enum NoteRoles {
+        TitleRole = Qt::UserRole + 1,
+        ContentRole,
+        TimestampRole
+    };
 
-    void addNote(const QString &title);
-    void removeNote(int index);
-    void updateNote(int index, const QString &newContent);
+    explicit NotesModel(QObject *parent = nullptr);
+
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QHash<int, QByteArray> roleNames() const override;
+
+    Q_INVOKABLE void addNote(const QString &title);
+    Q_INVOKABLE void removeNote(int index);
+    Q_INVOKABLE void updateNote(int index, const QString &newTitle, const QString &newContent);
+
+    Q_INVOKABLE QString getNoteTitle(int index) const;
+    Q_INVOKABLE QString getNoteContent(int index) const;
+
+private:
+    std::vector<Note> m_notes;
 };

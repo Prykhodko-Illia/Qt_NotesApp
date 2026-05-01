@@ -14,5 +14,10 @@ public:
     Note() = default;
     explicit Note(const QString &title);
 
+    QString getTitle() const;
+    QString getContent() const;
+    QDateTime getTimestamp() const;
+
+    void changeTitle(const QString &newTitle);
     void changeContent(const QString &newContent);
 };
